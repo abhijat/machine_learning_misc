@@ -2,15 +2,18 @@
 
 from numpy import *
 
-def loadDateSet(fileName):
+def loadDateSet(fileName, feat_idx, delim=','):
+    """ Read a csv file in, return the matrices of the features vs
+    labels, feat_idx is where the features begin.
+    """
     dataMat = []
     labelMat = []
     fr = open(fileName)
-    numFeat = len(fr.readline().split(',')) - 8	# read off the header line
+    numFeat = len(fr.readline().split(delim)) - feat_idx	# read off the header line
     for line in fr.readlines():
         lineArr = []
-        curLine = line.strip().split(',')
-        for i in range(8,numFeat):
+        curLine = line.strip().split(delim)
+        for i in range(feat_idx,numFeat):
             val = curLine[i]
             if val == '':
                 val = 0.0
@@ -20,7 +23,7 @@ def loadDateSet(fileName):
     return dataMat, labelMat
 
 def main():
-    xArr, yArr = loadDateSet('train.csv')
+    xArr, yArr = loadDateSet('train.csv', 8)
     ws = linalg.lstsq(xArr, yArr)[0]
     print type(ws), ws.shape
 
